@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration packages="com.localstack.appenders">
+
+    <Appenders>
+
+        <Console name="console">
+            <PatternLayout pattern="%d{ABSOLUTE} %-5p [%c{1}:%L] %m%n"/>
+            <ThresholdFilter level="DEBUG" />
+        </Console>
+
+        <JobExecutionFileAppender
+                name="optserver-log-separate"
+                fileName="logs/optserver.temp.log"
+                filePattern="logs/optserver.%x.log"
+                append="true">
+            <PatternLayout pattern="%d{ISO8601} %-5p %t [%c{1}:%L] %m%n"/>
+        </JobExecutionFileAppender>
+
+        <RollingFile name="optserver-log"
+                     fileName="logs/optserver.log"
+                     filePattern="logs/optserver.%d.gz"
+                     immediateFlush="true"
+                     append="true">
+            <PatternLayout pattern="%d{ISO8601} %-5p %t [%c{1}:%L] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="snmpTrap-log"
+                     fileName="logs/snmpTrap.log"
+                     filePattern="logs/snmpTrap.%d.gz"
+                     immediateFlush="true"
+                     append="true">
+            <PatternLayout pattern="%d{ISO8601} %-5p %t [%c{1}:%L] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <TriggeringEngineFileAppender name="triggering-log"
+                                      fileName="logs/optserver.temp.log"
+                                      filePattern="logs/triggering/triggering.%x.log"
+                                      immediateFlush="false"
+                                      append="true">
+            <PatternLayout pattern="%d{ISO8601} %-5p %t [%c{1}:%L] %m%n"/>
+        </TriggeringEngineFileAppender>
+        <RollingFile name="job-queue-log"
+                     fileName="logs/jobqueue.log"
+                     filePattern="logs/jobqueue.%d.gz"
+                     immediateFlush="true"
+                     append="true">
+            <PatternLayout pattern="%d{ISO8601}&#9;%-5p&#9;%t&#9;[%c{1}]&#9;%m&#9;%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org" level="debug"/>
+        <Logger name="net" level="debug"/>
+        <Logger name="com.localstack" level="debug"/>
+
+        <Logger name="org.springframework.ui.velocity" level="debug">
+            <AppenderRef ref="console"/>
+        </Logger>
+
+        <Logger name="com.localstack.optserver.service.triggering" level="info"/>
+
+        <Logger name="com.localstack.perf.rules" level="trace"/>
+
+        <Logger name="com.localstack.network.snmp.service"
+                level="debug"
+                additivity="false">
+            <AppenderRef ref="snmpTrap-log"/>
+        </Logger>
+
+        <Logger name="com.localstack.perf.rules.triggering"
+                level="all"
+                additivity="true">
+            <AppenderRef ref="triggering-log"/>
+        </Logger>
+
+        <Logger name="liquibase"
+                level="debug">
+        </Logger>
+
+        <Logger name="jobsQueueLogger"
+                level="info"
+                additivity="false">
+            <AppenderRef ref="job-queue-log"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="optserver-log"/>
+            <AppenderRef ref="optserver-log-separate"/>
+        </Root>
+    </Loggers>
+</Configuration>
