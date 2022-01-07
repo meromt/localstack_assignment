@@ -23,6 +23,17 @@ awslocal s3api put-object --bucket s3-bucket-03 --key index.html --body index.ht
 
 awslocal sqs create-queue --queue-name sqs-01
 
+
+#### Terraform create ###
+curl -L -o /opt/terraform/terraform.zip https://releases.hashicorp.com/terraform/0.13.4/terraform_0.13.4_linux_amd64.zip
+(cd /opt/terraform && unzip -q /opt/terraform/terraform.zip && rm /opt/terraform/terraform.zip)
+
+echo "PATH=$PATH:/opt/apache-maven-3.6.3/bin:/opt/gradle-6.7/bin:/opt/terraform" >> ~/.bashrc && source ~/.bashrc
+
+cd /opt/
+
+gh repo clone localstack/localstack-terraform-test
+
 #########
 
 systemctl start docker
